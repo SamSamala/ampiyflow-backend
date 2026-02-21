@@ -1,38 +1,14 @@
-import express from "express";
-import cors from "cors";
-import dotenv from "dotenv";
-import { PrismaClient } from "@prisma/client";
+import app from "./app";
+import { ENV } from "./config/env";
+import { prisma } from "./lib/prisma";
 
-dotenv.config();
+async function start() {
+  await prisma.$connect();
+  console.log("Database connected");
 
-const prisma = new PrismaClient();
-const app = express();
+  app.listen(ENV.PORT, () => {
+    console.log(`Server running on port ${ENV.PORT}`);
+  });
+}
 
-app.use(express.json());
-
-app.use(
-  cors({
-    origin: "https://www.ampiyflow.com",
-    credentials: true,
-  })
-);
-
-app.get("/", (req, res) => {
-  res.json({ message: "API Running" });
-});
-
-app.get("/users", async (req, res) => {
-  try {
-    const users = await prisma.user.findMany();
-    res.json(users);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Database error" });
-  }
-});
-
-const PORT = process.env.PORT || 8080;
-
-app.listen(PORT, () => {
-  console.log(`Backend running on port ${PORT}`);
-});
+start();

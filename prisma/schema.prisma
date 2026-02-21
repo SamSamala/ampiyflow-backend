@@ -13,4 +13,15 @@ model User {
   passwordHash String
   plan         String   @default("free")
   createdAt    DateTime @default(now())
+  instagram    InstagramAccount?
+}
+
+model InstagramAccount {
+  id              String   @id @default(uuid())
+  userId          String   @unique
+  instagramUserId String
+  username        String
+  accessToken     String
+  tokenExpiresAt  DateTime
+  user            User     @relation(fields: [userId], references: [id])
 }
