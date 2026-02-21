@@ -2,6 +2,7 @@ import crypto from "crypto";
 import { ENV } from "../config/env";
 
 const algorithm = "aes-256-cbc";
+
 const key = crypto
   .createHash("sha256")
   .update(ENV.ENCRYPTION_KEY)

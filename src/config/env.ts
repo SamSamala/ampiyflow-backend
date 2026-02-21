@@ -1,6 +1,5 @@
 export const ENV = {
   PORT: process.env.PORT || 8080,
-  DATABASE_URL: process.env.DATABASE_URL!,
   JWT_SECRET: process.env.JWT_SECRET!,
   META_APP_ID: process.env.META_APP_ID!,
   META_APP_SECRET: process.env.META_APP_SECRET!,
