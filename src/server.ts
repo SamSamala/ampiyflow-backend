@@ -10,15 +10,17 @@ const app = express();
 
 app.use(express.json());
 
-git add .
-git commit -m "fix production cors for www"
-git push
+app.use(
+  cors({
+    origin: "https://www.ampiyflow.com",
+    credentials: true,
+  })
+);
 
 app.get("/", (req, res) => {
   res.json({ message: "API Running" });
 });
 
-// 🔥 Test DB Route
 app.get("/users", async (req, res) => {
   try {
     const users = await prisma.user.findMany();
@@ -29,8 +31,8 @@ app.get("/users", async (req, res) => {
   }
 });
 
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 8080;
 
 app.listen(PORT, () => {
-  console.log(`Backend running on http://localhost:${PORT}`);
+  console.log(`Backend running on port ${PORT}`);
 });
