@@ -13,9 +13,10 @@ app.use(express.json());
 app.use(
   cors({
     origin: [
-  "http://localhost:3000",
-  "https://ampiyflow.com",
-],
+      "http://localhost:3000",
+      "https://ampiyflow.com",
+      "https://www.ampiyflow.com",
+    ],
     credentials: true,
   })
 );
