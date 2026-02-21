@@ -4,9 +4,7 @@ import jwt from "jsonwebtoken";
 export function middleware(req: NextRequest) {
   const token = req.cookies.get("auth_token")?.value;
 
-  const protectedPaths = ["/api/protected"];
-
-  if (protectedPaths.some((path) => req.nextUrl.pathname.startsWith(path))) {
+  if (req.nextUrl.pathname.startsWith("/api/protected")) {
     if (!token) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
