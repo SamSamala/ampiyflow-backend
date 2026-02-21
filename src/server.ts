@@ -10,16 +10,9 @@ const app = express();
 
 app.use(express.json());
 
-app.use(
-  cors({
-    origin: [
-      "http://localhost:3000",
-      "https://ampiyflow.com",
-      "https://www.ampiyflow.com",
-    ],
-    credentials: true,
-  })
-);
+git add .
+git commit -m "fix production cors for www"
+git push
 
 app.get("/", (req, res) => {
   res.json({ message: "API Running" });
