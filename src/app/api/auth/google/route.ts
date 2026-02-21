@@ -10,8 +10,37 @@ const client = new OAuth2Client(
 
 export async function GET(req: NextRequest) {
   const url = new URL(req.url);
-  const code = url.searchParams.get("code");
 
+  const code = url.searchParams.get("code");
+  const checkSession = url.searchParams.get("me");
+
+  // 🔹 1️⃣ SESSION CHECK MODE
+  if (checkSession === "true") {
+    const token = req.cookies.get("auth_token")?.value;
+
+    if (!token) {
+      return NextResponse.json(
+        { error: "Unauthorized" },
+        { status: 401 }
+      );
+    }
+
+    try {
+      const decoded = jwt.verify(
+        token,
+        process.env.JWT_SECRET!
+      );
+
+      return NextResponse.json(decoded);
+    } catch {
+      return NextResponse.json(
+        { error: "Invalid token" },
+        { status: 401 }
+      );
+    }
+  }
+
+  // 🔹 2️⃣ GOOGLE REDIRECT MODE
   if (!code) {
     const authUrl = client.generateAuthUrl({
       access_type: "offline",
@@ -21,6 +50,7 @@ export async function GET(req: NextRequest) {
     return NextResponse.redirect(authUrl);
   }
 
+  // 🔹 3️⃣ GOOGLE CALLBACK MODE
   const { tokens } = await client.getToken(code);
   client.setCredentials(tokens);
 
@@ -32,7 +62,10 @@ export async function GET(req: NextRequest) {
   const payload = ticket.getPayload();
 
   if (!payload?.email) {
-    return NextResponse.json({ error: "Invalid token" }, { status: 400 });
+    return NextResponse.json(
+      { error: "Invalid token" },
+      { status: 400 }
+    );
   }
 
   const token = jwt.sign(
